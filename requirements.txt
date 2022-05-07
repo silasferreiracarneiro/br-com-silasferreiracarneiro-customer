@@ -1,0 +1,9 @@
+#Flask-JWT-Extended
+#Flask-RESTful
+#Flask-SQLAlchemy
+#Flask-PyMongo
+
+fastapi[all]
+motor
+uvicorn
+certifi

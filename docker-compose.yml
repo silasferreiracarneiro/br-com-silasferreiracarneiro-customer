@@ -1,0 +1,40 @@
+# Use root/example as user/password credentials
+version: '3.1'
+
+services:
+
+  app:
+    build: .
+    command: bash -c "uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload"
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/code
+    links:
+      - mongo-express
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: silasferreira
+      ME_CONFIG_MONGODB_ADMINPASSWORD: silasferreira123
+      ME_CONFIG_MONGODB_URL: mongodb://silasferreira:silasferreira123@mongo:27017/
+    links:
+      - "mongo"
+
+  mongo:
+    image: mongo
+    hostname: customer_db
+    restart: always
+    environment:
+      - MONGO_INITDB_DATABASE=customer_db
+      - MONGO_INITDB_ROOT_USERNAME=silasferreira
+      - MONGO_INITDB_ROOT_PASSWORD=silasferreira123
+    volumes:
+      - ./init-db.js:/docker-entrypoint-initdb.d/init-db.js:ro
+    ports:
+      - 27017:27017
+
